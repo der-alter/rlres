@@ -4,31 +4,29 @@ html {
   margin: 0;
   height: -webkit-fill-available;
   font-family: sans-serif;
+  box-sizing: border-box;
 }
 body {
   padding: 0; 
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
+  color: dimgray;
+  background-color:lemonchiffon;
 }
 #root {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1
 }`)
-
 
 module App = {
   @react.component
   let make = () => {
+    /* let (query, setQuery) = React.useState(_ => QueryConst.defaultQuery) */
+
     <>
       <Head
         defaultTitle="HN Search Engine" titleTemplate="%s - HN Search Engine"
       />
-      <Header />
-      <Footer />
+      <Header>
+        <Search>{"Search"->React.string}</Search>
+      </Header>
     </>
   }
 }

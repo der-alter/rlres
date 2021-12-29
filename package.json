@@ -16,7 +16,11 @@
     "bundle": "webpack",
     "server": "node server/server.mjs",
     "clean": "rescript clean",
-    "test": "retest --with-dom test/*_test.mjs"
+    "test": "retest --with-dom test/*_test.mjs",
+    "svgo:icons": "svgo --folder=src/svg/source/icons --output=src/svg/optimized_icons --pretty",
+    "svgfixer:icons": "oslllo-svg-fixer --source=src/svg/optimized_icons --destination=src/svg/fixed_icons",
+    "fromsvg:icons": "react-from-svg src/svg/fixed_icons src/svg/components --remove-stroke --remove-fill --with-web-for-rescript",
+    "svg": "yarn svgo:icons && yarn svgfixer:icons && yarn fromsvg:icons"
   },
   "devDependencies": {
     "chalk": "^4.1.0",
@@ -25,8 +29,11 @@
     "express": "^4.17.1",
     "html-webpack-plugin": "^5.2.0",
     "mime": "^2.5.2",
+    "oslllo-svg-fixer": "^1.4.1",
+    "react-from-svg": "^5.1.2",
     "rescript": "^9.1.4",
     "rescript-devserver-tools": "^1.0.9",
+    "svgo": "^2.8.0",
     "webpack": "^5.24.2",
     "webpack-cli": "^4.5.0"
   },

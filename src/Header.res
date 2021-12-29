@@ -1,28 +1,28 @@
 module Styles = {
   open Emotion
   let container = css({
-    "flexGrow": 0,
-    "padding": 10,
-  })
-  let title = css({
-    "textAlign": "center",
-    "margin": 0,
-    "fontSize": 24,
-  })
-  let nav = css({
     "display": "flex",
     "flexDirection": "row",
-    "alignItems": "stretch",
     "justifyContent": "center",
-    "padding": 10,
+    "alignItems": "center",
+    "margin": "4ex auto",
+    "maxWidth": "768px",
+    "width": "100%",
+  })
+  let title = css({
+    "order": 1,
+    "color": "black",
+    "fontSize": "1.3em",
+    "fontWeight": 500,
+    "fontFamily": "monospace",
+    "paddingLeft": "2ch",
   })
 }
 
 @react.component
-let make = () => {
+let make = (~children) => {
   <header className=Styles.container>
-    <h1 className=Styles.title> {"ReScript React Starter Kit"->React.string} </h1>
-    <nav className=Styles.nav>
-    </nav>
+    <h1 className=Styles.title> {"Hackers News Search Engine"->React.string} </h1>
+    children
   </header>
 }

@@ -7,3 +7,10 @@ lib/
 build/
 src/**/*.mjs
 test/**/*.mjs
+
+/src/svg/optimized_icons
+/src/svg/fixed_icons
+/src/svg/optimized_providers
+/src/svg/optimized
+/src/svg/optimized2
+
