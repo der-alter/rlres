@@ -19,26 +19,15 @@ body {
   flex-grow: 1
 }`)
 
+
 module App = {
   @react.component
   let make = () => {
-    let url = Router.useUrl()
-
-    React.useEffect1(() => {
-      let () = window["scrollTo"](. 0, 0)
-      None
-    }, [url.path])
-
     <>
       <Head
-        defaultTitle="ReScript React Starter Kit" titleTemplate="%s - ReScript React Starter Kit"
+        defaultTitle="HN Search Engine" titleTemplate="%s - HN Search Engine"
       />
       <Header />
-      {switch url.path {
-      | list{} => <Home />
-      | list{"robots"} => <Robots />
-      | _ => <ErrorPage text="Not found" />
-      }}
       <Footer />
     </>
   }
