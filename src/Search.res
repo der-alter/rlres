@@ -17,12 +17,30 @@ module Styles = {
 }
 
 @react.component
-let make = (~children) => {
-  <form className=Styles.container>
-    <SVGIconSearch style={ReactDOM.Style.make(~overflow="visible", ~display="block", ())} fill="darkorange" height="15" width="15" />
-    <input className={Styles.input} />
-    <Button>
-      children
-    </Button>
+let make = (~children, ~defaultValue: string, ~submitFunction: 'a => unit) => {
+  let (q, setQ) = React.useState(_ => defaultValue)
+
+  let onChange = e => {
+    let value = ReactEvent.Form.target(e)["value"]
+    switch value {
+    | Some(v) => setQ(v)
+    | None => ()
+    }
+  }
+
+  let onSubmit = e => {
+    ReactEvent.Synthetic.preventDefault(e)
+    submitFunction(q)
+  }
+
+  <form className=Styles.container onSubmit>
+    <SVGIconSearch
+      style={ReactDOM.Style.make(~overflow="visible", ~display="block", ())}
+      fill="darkorange"
+      height="15"
+      width="15"
+    />
+    <input className={Styles.input} defaultValue onChange />
+    <Button> children </Button>
   </form>
 }

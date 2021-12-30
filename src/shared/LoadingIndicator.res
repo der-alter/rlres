@@ -2,7 +2,7 @@ module Styles = {
   open Emotion
 
   let loader = css({
-    "border": "10px solid lemonchiffon",
+    "border": "10px solid #ffedac",
     "borderTop": "10px solid darkorange",
     "borderRadius": "50%",
     "width": "50px",
