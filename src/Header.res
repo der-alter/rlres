@@ -12,7 +12,7 @@ module Styles = {
   let title = css({
     "order": 1,
     "color": "black",
-    "fontSize": "1.3em",
+    "fontSize": "1.2em",
     "fontWeight": 500,
     "fontFamily": "monospace",
     "paddingLeft": "2ch",
