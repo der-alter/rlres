@@ -2,6 +2,9 @@ module Styles = {
   open Emotion
   let container = css({
     "display": "flex",
+    "margin": "4ex auto",
+    "maxWidth": "768px",
+    "width": "100%",
     "flexDirection": "row",
     "justifyContent": "center",
     "alignItems": "center",
@@ -12,7 +15,6 @@ module Styles = {
     "color": "black",
     "fontSize": "1.2em",
     "fontWeight": 500,
-    "fontFamily": "monospace",
     "paddingLeft": "2ch",
   })
 }

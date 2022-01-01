@@ -13,9 +13,6 @@ body {
   background-color:lemonchiffon;
 }
 #root {
-    margin: 4ex auto;
-    max-width: 768px;
-    width: 100%;
 }`)
 
 type state = {
@@ -56,7 +53,12 @@ module App = {
       )
       request->Future.get(payload => {
         switch payload {
-        | Ok({response}) => setHits(_ => Array.concat(hits, HN.Hit.parseHits(response)))
+        | Ok({response}) =>
+          setHits(_ =>
+            state.page === 0
+              ? HN.Hit.parseHits(response)
+              : Array.concat(hits, HN.Hit.parseHits(response))
+          )
         | _ => ()
         }
         setResults(_ => Done(payload))

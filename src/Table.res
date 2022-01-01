@@ -48,8 +48,64 @@ module Sort = {
 module Styles = {
   open Emotion
 
-  let header = css({
+  let container = css({
+    "maxWidth": "768px",
+    "width": "100%",
+    "margin": "4ex auto",
     "display": "flex",
+    "flexFlow": "column nowrap",
+    "flex": "1 1 auto",
+  })
+
+  /* Rows */
+  let row = css({
+    "width": "100%",
+    "display": "flex",
+    "flexFlow": "row nowrap",
+  })
+
+  let head = cx([row])
+
+  let body = cx([
+    row,
+    css({
+      "width": "100%",
+      "display": "flex",
+      "flexFlow": "row nowrap",
+      "fontSize": ".8em",
+    }),
+  ])
+
+  /* Cells */
+  let cell = css({
+    "display": "flex",
+    "flexFlow": "row nowrap",
+    "flexGrow": 1,
+    "lineHeight": "3ex",
+    "flexBasis": 0,
+  })
+
+  let header = cx([
+    cell,
+    css({
+      "whiteSpace": "normal",
+      "justifyContent": "center",
+    }),
+  ])
+
+  let data = cx([
+    cell,
+    css({
+      "overflow": "hidden",
+      "textOverflow": "ellipsis",
+      "wordBreak": "break-word",
+      "whiteSpace": "nowrap",
+    }),
+  ])
+
+  let link = css({
+    "color": "royalblue",
+    "fontWeight": 600,
   })
 }
 
@@ -73,23 +129,22 @@ let reducer = (state, action) =>
 @react.component
 let make = (~hits: array<HN.Hit.t>) => {
   let (state, dispatch) = React.useReducer(reducer, initialState)
-  Js.log(hits)
 
-  <section>
-    <header className={Styles.header}>
-      <div style={ReactDOM.Style.make(~flexGrow="16", ())}>
+  <section className={Styles.container}>
+    <header className={Styles.head}>
+      <div className={Styles.header} style={ReactDOM.Style.make(~flexGrow="10", ())}>
         <Sort
           sortKey="TITLE" onSort={_ => dispatch(Sort("TITLE"))} activeSortKey=state.activeSortKey>
           {"Title"->React.string}
         </Sort>
       </div>
-      <div style={ReactDOM.Style.make(~flexGrow="3", ())}>
+      <div className={Styles.header} style={ReactDOM.Style.make(~flexGrow="2", ())}>
         <Sort
           sortKey="AUTHOR" onSort={_ => dispatch(Sort("AUTHOR"))} activeSortKey=state.activeSortKey>
           {"Author"->React.string}
         </Sort>
       </div>
-      <div style={ReactDOM.Style.make(~flexGrow="1", ())}>
+      <div className={Styles.header}>
         <Sort
           sortKey="COMMENTS"
           onSort={_ => dispatch(Sort("COMMENTS"))}
@@ -97,13 +152,13 @@ let make = (~hits: array<HN.Hit.t>) => {
           {"Coms"->React.string}
         </Sort>
       </div>
-      <div style={ReactDOM.Style.make(~flexGrow="1", ())}>
+      <div className={Styles.header}>
         <Sort
           sortKey="POINTS" onSort={_ => dispatch(Sort("POINTS"))} activeSortKey=state.activeSortKey>
           {"Pts"->React.string}
         </Sort>
       </div>
-      <div style={ReactDOM.Style.make(~flexGrow="1", ())}>
+      <div className={Styles.header} style={ReactDOM.Style.make(~flexGrow="2", ())}>
         <Sort
           sortKey="CREATEDAT"
           onSort={_ => dispatch(Sort("CREATEDAT"))}
@@ -114,16 +169,34 @@ let make = (~hits: array<HN.Hit.t>) => {
     </header>
     {React.array(
       Array.map(hits, hit =>
-        <div key=hit.objectId>
-          <div>
-            {Option.getWithDefault(
-              hit.title,
-              Js.String.substring(
-                ~from=0,
-                ~to_=70,
-                Option.getWithDefault(hit.commentText, "No title"),
-              ),
-            )->React.string}
+        <div className={Styles.body} key=hit.objectId>
+          <div className={Styles.data} style={ReactDOM.Style.make(~flexGrow="10", ())}>
+            <a
+              href={`https://news.ycombinator.com/item?id=${hit.objectId}`}
+              className={Styles.link}
+              target="_blank"
+              rel="noopener noreferrer">
+              {Option.getWithDefault(
+                hit.title,
+                Js.String.substring(
+                  ~from=0,
+                  ~to_=70,
+                  Option.getWithDefault(hit.commentText, "No title"),
+                ) ++ "...",
+              )->React.string}
+            </a>
+          </div>
+          <div className={Styles.data} style={ReactDOM.Style.make(~flexGrow="2", ())}>
+            {hit.author->React.string}
+          </div>
+          <div className={Styles.data}>
+            {Int.toString(Option.getWithDefault(hit.numComments, 0))->React.string}
+          </div>
+          <div className={Styles.data}>
+            {Int.toString(Option.getWithDefault(hit.points, 0))->React.string}
+          </div>
+          <div className={Styles.data} style={ReactDOM.Style.make(~flexGrow="2", ())}>
+            {Int.toString(hit.timestamp)->React.string}
           </div>
         </div>
       ),
