@@ -80,7 +80,15 @@ module App = {
       | Done(Ok(_)) => <>
           <Table hits />
           <Spacer />
-          <Button onClick={_ => dispatch(More)}> {"More"->React.string} </Button>
+          <div
+            style={ReactDOM.Style.make(
+              ~marginBottom="2ex",
+              ~display="flex",
+              ~justifyContent="center",
+              (),
+            )}>
+            <Button onClick={_ => dispatch(More)}> {"More"->React.string} </Button>
+          </div>
         </>
       }}
     </>

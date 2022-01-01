@@ -49,7 +49,7 @@ module Styles = {
   open Emotion
 
   let container = css({
-    "maxWidth": "768px",
+    "maxWidth": "1024px",
     "width": "100%",
     "margin": "4ex auto",
     "display": "flex",
@@ -85,13 +85,7 @@ module Styles = {
     "flexBasis": 0,
   })
 
-  let header = cx([
-    cell,
-    css({
-      "whiteSpace": "normal",
-      "justifyContent": "center",
-    }),
-  ])
+  let header = cx([cell])
 
   let data = cx([
     cell,
@@ -109,94 +103,101 @@ module Styles = {
   })
 }
 
+type sortKey = Title | Author | Coms | Pts | Date
+
 type state = {
-  activeSortKey: string,
+  activeSortKey: sortKey,
   isSortReverse: bool,
 }
 
 let initialState = {
-  activeSortKey: "TITLE",
+  activeSortKey: Title,
   isSortReverse: false,
 }
 
-type action = Sort(string)
+type action = Sort(sortKey)
 
 let reducer = (state, action) =>
   switch action {
-  | Sort(sortKey) => {...state, activeSortKey: sortKey}
+  | Sort(sortKey) => {
+      activeSortKey: sortKey,
+      isSortReverse: state.activeSortKey === sortKey && !state.isSortReverse,
+    }
+  }
+
+let sorts = (sortKey: sortKey) =>
+  switch sortKey {
+  | Title => (a: HN.Hit.t, b: HN.Hit.t) => compare(a.title, b.title)
+  | Author => (a: HN.Hit.t, b: HN.Hit.t) => compare(a.author, b.author)
+  | Coms => (a: HN.Hit.t, b: HN.Hit.t) => compare(a.numComments, b.numComments)
+  | Pts => (a: HN.Hit.t, b: HN.Hit.t) => compare(a.points, b.points)
+  | Date => (a: HN.Hit.t, b: HN.Hit.t) => compare(a.timestamp, b.timestamp)
   }
 
 @react.component
 let make = (~hits: array<HN.Hit.t>) => {
   let (state, dispatch) = React.useReducer(reducer, initialState)
+  let sortedList = hits->SortArray.stableSortBy(sorts(state.activeSortKey))
+  let reverseSortedList = state.isSortReverse ? sortedList->Array.reverseInPlace : sortedList
 
   <section className={Styles.container}>
     <header className={Styles.head}>
       <div className={Styles.header} style={ReactDOM.Style.make(~flexGrow="10", ())}>
-        <Sort
-          sortKey="TITLE" onSort={_ => dispatch(Sort("TITLE"))} activeSortKey=state.activeSortKey>
+        <Sort sortKey=Title onSort={_ => dispatch(Sort(Title))} activeSortKey=state.activeSortKey>
           {"Title"->React.string}
         </Sort>
       </div>
       <div className={Styles.header} style={ReactDOM.Style.make(~flexGrow="2", ())}>
-        <Sort
-          sortKey="AUTHOR" onSort={_ => dispatch(Sort("AUTHOR"))} activeSortKey=state.activeSortKey>
+        <Sort sortKey=Author onSort={_ => dispatch(Sort(Author))} activeSortKey=state.activeSortKey>
           {"Author"->React.string}
         </Sort>
       </div>
       <div className={Styles.header}>
-        <Sort
-          sortKey="COMMENTS"
-          onSort={_ => dispatch(Sort("COMMENTS"))}
-          activeSortKey=state.activeSortKey>
+        <Sort sortKey=Coms onSort={_ => dispatch(Sort(Coms))} activeSortKey=state.activeSortKey>
           {"Coms"->React.string}
         </Sort>
       </div>
       <div className={Styles.header}>
-        <Sort
-          sortKey="POINTS" onSort={_ => dispatch(Sort("POINTS"))} activeSortKey=state.activeSortKey>
+        <Sort sortKey=Pts onSort={_ => dispatch(Sort(Pts))} activeSortKey=state.activeSortKey>
           {"Pts"->React.string}
         </Sort>
       </div>
       <div className={Styles.header} style={ReactDOM.Style.make(~flexGrow="2", ())}>
-        <Sort
-          sortKey="CREATEDAT"
-          onSort={_ => dispatch(Sort("CREATEDAT"))}
-          activeSortKey=state.activeSortKey>
+        <Sort sortKey=Date onSort={_ => dispatch(Sort(Date))} activeSortKey=state.activeSortKey>
           {"Date"->React.string}
         </Sort>
       </div>
     </header>
     {React.array(
-      Array.map(hits, hit =>
-        <div className={Styles.body} key=hit.objectId>
+      Array.map(reverseSortedList, item =>
+        <div className={Styles.body} key=item.objectId>
           <div className={Styles.data} style={ReactDOM.Style.make(~flexGrow="10", ())}>
             <a
-              href={`https://news.ycombinator.com/item?id=${hit.objectId}`}
+              href={`https://news.ycombinator.com/item?id=${item.objectId}`}
               className={Styles.link}
               target="_blank"
               rel="noopener noreferrer">
               {Option.getWithDefault(
-                hit.title,
+                item.title,
                 Js.String.substring(
                   ~from=0,
                   ~to_=70,
-                  Option.getWithDefault(hit.commentText, "No title"),
+                  Option.getWithDefault(item.commentText, "No title"),
                 ) ++ "...",
               )->React.string}
             </a>
           </div>
           <div className={Styles.data} style={ReactDOM.Style.make(~flexGrow="2", ())}>
-            {hit.author->React.string}
+            {item.author->React.string}
           </div>
           <div className={Styles.data}>
-            {Int.toString(Option.getWithDefault(hit.numComments, 0))->React.string}
+            {Int.toString(Option.getWithDefault(item.numComments, 0))->React.string}
           </div>
           <div className={Styles.data}>
-            {Int.toString(Option.getWithDefault(hit.points, 0))->React.string}
+            {Int.toString(Option.getWithDefault(item.points, 0))->React.string}
           </div>
           <div className={Styles.data} style={ReactDOM.Style.make(~flexGrow="2", ())}>
-            {Int.toString(hit.timestamp)->React.string}
+            {Int.toString(item.timestamp)->React.string}
           </div>
         </div>
       ),
