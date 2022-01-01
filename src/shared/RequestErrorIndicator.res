@@ -1,7 +1,7 @@
 module Styles = {
   open Emotion
   let error = css({
-    "color": "red",
+    "color": "indianred",
     "fontSize": "bold",
     "textAlign": "center",
     "padding": "4ex 0",

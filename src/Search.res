@@ -5,6 +5,7 @@ module Styles = {
     "flexGrow": 1,
   })
   let input = css({
+    "color": "dimgray",
     "flexGrow": 1,
     "margin": "0 1ch",
     "border": "0px solid",

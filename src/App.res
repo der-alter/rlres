@@ -13,6 +13,9 @@ body {
   background-color:lemonchiffon;
 }
 #root {
+    margin: 4ex auto;
+    max-width: 768px;
+    width: 100%;
 }`)
 
 type state = {
@@ -24,6 +27,8 @@ let initialState = {
   query: "rescript",
   page: 0,
 }
+
+let noHits: array<HN.Hit.t> = []
 
 type action = Query(string) | More
 
@@ -38,12 +43,10 @@ module App = {
   let make = () => {
     let (state, dispatch) = React.useReducer(reducer, initialState)
     let (results, setResults) = React.useState(_ => AsyncData.NotAsked)
-    let (refresh, setRefresh) = React.useState(_ => false)
-    let (data, setData) = React.useState(_ => [])
+    let (hits, setHits) = React.useState(_ => noHits)
 
     React.useEffect1(() => {
       setResults(_ => Loading)
-      setRefresh(_ => state.page === 0)
       let request = Request.make(
         ~url=`https://hn.algolia.com/api/v1/search?query=${state.query}&page=${string_of_int(
             state.page,
@@ -51,7 +54,13 @@ module App = {
         ~responseType=Json,
         (),
       )
-      request->Future.get(payload => setResults(_ => Done(payload)))
+      request->Future.get(payload => {
+        switch payload {
+        | Ok({response}) => setHits(_ => Array.concat(hits, HN.Hit.parseHits(response)))
+        | _ => ()
+        }
+        setResults(_ => Done(payload))
+      })
       Some(() => request->Future.cancel)
     }, [state])
 
@@ -66,13 +75,11 @@ module App = {
       | NotAsked => React.null
       | Loading => <LoadingIndicator />
       | Done(Error(error)) => <RequestErrorIndicator error />
-      | Done(Ok({status, ok, response})) =>
-        switch (status, ok) {
-        | (200, true) => {
-          <Table data moreFunction={_ => dispatch(More)} />
-        }
-        | _ => <ResponseErrorIndicator status />
-        }
+      | Done(Ok(_)) => <>
+          <Table hits />
+          <Spacer />
+          <Button onClick={_ => dispatch(More)}> {"More"->React.string} </Button>
+        </>
       }}
     </>
   }

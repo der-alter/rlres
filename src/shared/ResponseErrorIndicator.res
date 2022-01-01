@@ -1,7 +1,7 @@
 module Styles = {
   open Emotion
   let error = css({
-    "color": "red",
+    "color": "indianred",
     "fontSize": "bold",
     "textAlign": "center",
     "padding": "4ex 0",
@@ -9,6 +9,6 @@ module Styles = {
 }
 
 @react.component
-let make = (~status: int) => {
-  <p className={Styles.error}> {string_of_int(status)->React.string} </p>
+let make = (~message: string) => {
+  <p className={Styles.error}> {message->React.string} </p>
 }
