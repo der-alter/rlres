@@ -1,6 +1,5 @@
 {
   "name": "rlres",
-  "version": "0.0.0",
   "description": "HN Search Engine",
   "main": "src/App.bs.js",
   "repository": "git@github.com:stevj/rlres.git",
