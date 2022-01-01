@@ -25,11 +25,23 @@ module Sort = {
         "borderColor": "darkorange",
       },
     })
+
+    let activeButton = cx([
+      button,
+      css({
+        "background": "ivory",
+        "borderColor": "darkorange",
+      }),
+    ])
   }
 
   @react.component
   let make = (~children, ~onSort, ~sortKey, ~activeSortKey) => {
-    <button className={Styles.button} onClick={_ => onSort(sortKey)}> children </button>
+    <button
+      className={sortKey !== activeSortKey ? Styles.button : Styles.activeButton}
+      onClick={_ => onSort(sortKey)}>
+      children
+    </button>
   }
 }
 
