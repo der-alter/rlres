@@ -1,12 +1,12 @@
 {
-  "name": "rescript-react-starter-kit",
-  "version": "0.7.2",
-  "description": "A starter kit for ReScript React applications",
+  "name": "rlres",
+  "version": "0.0.0",
+  "description": "HN Search Engine",
   "main": "src/App.bs.js",
-  "repository": "git@github.com:bloodyowl/rescript-react-starter-kit.git",
-  "author": "bloodyowl <bloodyowl@icloud.com>",
+  "repository": "git@github.com:stevj/rlres.git",
+  "author": "stevj <staivenj@protonmail.com>",
   "license": "MIT",
-  "private": false,
+  "private": true,
   "engines": {
     "node": ">=14.0.0"
   },
