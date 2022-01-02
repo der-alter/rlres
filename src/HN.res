@@ -7,7 +7,7 @@ module Hit = {
     commentText: option<string>,
     numComments: option<int>,
     points: option<int>,
-    timestamp: int,
+    createdAt: string,
   }
 
   let fromJson = json => {
@@ -20,7 +20,7 @@ module Hit = {
       commentText: json |> optional(field("comment_text", string)),
       numComments: json |> optional(field("num_comments", int)),
       points: json |> optional(field("points", int)),
-      timestamp: json |> field("created_at_i", int),
+      createdAt: json |> field("created_at", string),
     }
   }
 

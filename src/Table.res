@@ -1,50 +1,3 @@
-module Sort = {
-  module Styles = {
-    open Emotion
-
-    let button = css({
-      "width": "100%",
-      "cursor": "pointer",
-      "textAlign": "left",
-      "padding": "1ex 2ch",
-      "color": "text",
-      "background": "lemonchiffon",
-      "borderWidth": "0 0 4px",
-      "borderStyle": "solid",
-      "borderColor": "rgb(255,216,169)",
-      "&:hover": {
-        "background": "ivory",
-        "borderColor": "darkorange",
-      },
-      "&:focus": {
-        "background": "ivory",
-        "borderColor": "darkorange",
-      },
-      "&:active": {
-        "background": "ivory",
-        "borderColor": "darkorange",
-      },
-    })
-
-    let activeButton = cx([
-      button,
-      css({
-        "background": "ivory",
-        "borderColor": "darkorange",
-      }),
-    ])
-  }
-
-  @react.component
-  let make = (~children, ~onSort, ~sortKey, ~activeSortKey) => {
-    <button
-      className={sortKey !== activeSortKey ? Styles.button : Styles.activeButton}
-      onClick={_ => onSort(sortKey)}>
-      children
-    </button>
-  }
-}
-
 module Styles = {
   open Emotion
 
@@ -131,7 +84,7 @@ let sorts = (sortKey: sortKey) =>
   | Author => (a: HN.Hit.t, b: HN.Hit.t) => compare(a.author, b.author)
   | Coms => (a: HN.Hit.t, b: HN.Hit.t) => compare(a.numComments, b.numComments)
   | Pts => (a: HN.Hit.t, b: HN.Hit.t) => compare(a.points, b.points)
-  | Date => (a: HN.Hit.t, b: HN.Hit.t) => compare(a.timestamp, b.timestamp)
+  | Date => (a: HN.Hit.t, b: HN.Hit.t) => compare(a.createdAt, b.createdAt)
   }
 
 @react.component
@@ -139,6 +92,7 @@ let make = (~hits: array<HN.Hit.t>) => {
   let (state, dispatch) = React.useReducer(reducer, initialState)
   let sortedList = hits->SortArray.stableSortBy(sorts(state.activeSortKey))
   let reverseSortedList = state.isSortReverse ? sortedList->Array.reverseInPlace : sortedList
+  let now = Date.make()
 
   <section className={Styles.container}>
     <header className={Styles.head}>
@@ -197,7 +151,11 @@ let make = (~hits: array<HN.Hit.t>) => {
             {Int.toString(Option.getWithDefault(item.points, 0))->React.string}
           </div>
           <div className={Styles.data} style={ReactDOM.Style.make(~flexGrow="2", ())}>
-            {Int.toString(item.timestamp)->React.string}
+            {DateFns.formatDistance(
+              Date.fromString(item.createdAt),
+              now,
+              DateFns.formatDistanceOptions,
+            )->React.string}
           </div>
         </div>
       ),
