@@ -141,16 +141,20 @@ let make = (~hits: array<HN.Hit.t>) => {
               )->React.string}
             </a>
           </div>
-          <div className={Styles.data} style={ReactDOM.Style.make(~flexGrow="2", ())}>
+          <div
+            className={Styles.data}
+            style={ReactDOM.Style.make(~flexGrow="2", ~fontSize=".85em", ())}>
             {item.author->React.string}
           </div>
-          <div className={Styles.data}>
+          <div className={Styles.data} style={ReactDOM.Style.make(~justifyContent="center", ())}>
             {Int.toString(Option.getWithDefault(item.numComments, 0))->React.string}
           </div>
-          <div className={Styles.data}>
+          <div className={Styles.data} style={ReactDOM.Style.make(~justifyContent="center", ())}>
             {Int.toString(Option.getWithDefault(item.points, 0))->React.string}
           </div>
-          <div className={Styles.data} style={ReactDOM.Style.make(~flexGrow="2", ())}>
+          <div
+            className={Styles.data}
+            style={ReactDOM.Style.make(~flexGrow="2", ~fontSize=".85em", ())}>
             {DateFns.formatDistance(
               Date.fromString(item.createdAt),
               now,
