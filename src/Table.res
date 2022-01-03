@@ -59,12 +59,12 @@ module Styles = {
 type sortKey = Title | Author | Coms | Pts | Date
 
 type state = {
-  activeSortKey: sortKey,
+  activeSortKey: option<sortKey>,
   isSortReverse: bool,
 }
 
 let initialState = {
-  activeSortKey: Title,
+  activeSortKey: None,
   isSortReverse: false,
 }
 
@@ -73,8 +73,8 @@ type action = Sort(sortKey)
 let reducer = (state, action) =>
   switch action {
   | Sort(sortKey) => {
-      activeSortKey: sortKey,
-      isSortReverse: state.activeSortKey === sortKey && !state.isSortReverse,
+      activeSortKey: Some(sortKey),
+      isSortReverse: state.activeSortKey === Some(sortKey) && !state.isSortReverse,
     }
   }
 
@@ -89,10 +89,15 @@ let sorts = (sortKey: sortKey) =>
 
 @react.component
 let make = (~hits: array<HN.Hit.t>) => {
-  let (state, dispatch) = React.useReducer(reducer, initialState)
-  let sortedList = hits->SortArray.stableSortBy(sorts(state.activeSortKey))
-  let reverseSortedList = state.isSortReverse ? sortedList->Array.reverseInPlace : sortedList
   let now = Date.make()
+  let (state, dispatch) = React.useReducer(reducer, initialState)
+  let reverseSortedList = switch state.activeSortKey {
+  | Some(sortKey) => {
+      let sortedList = hits->SortArray.stableSortBy(sorts(sortKey))
+      state.isSortReverse ? sortedList->Array.reverseInPlace : sortedList
+    }
+  | None => hits
+  }
 
   <section className={Styles.container}>
     <header className={Styles.head}>

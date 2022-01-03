@@ -37,7 +37,7 @@ module Styles = {
 @react.component
 let make = (~children, ~onSort, ~sortKey, ~activeSortKey) => {
   <button
-    className={sortKey !== activeSortKey ? Styles.button : Styles.activeButton}
+    className={Some(sortKey) !== activeSortKey ? Styles.button : Styles.activeButton}
     onClick={_ => onSort(sortKey)}>
     children
   </button>
