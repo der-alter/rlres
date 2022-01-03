@@ -13,6 +13,8 @@ module Hit = {
   let fromJson = json => {
     open Json.Decode
     {
+      // TODO: deprecated |>
+      // https://rescript-lang.org/docs/manual/latest/pipe#triangle-pipe-deprecated
       title: json |> optional(field("title", string)),
       url: json |> optional(field("url", string)),
       author: json |> field("author", string),

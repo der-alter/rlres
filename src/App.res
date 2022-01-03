@@ -73,23 +73,21 @@ module App = {
           {"Search"->React.string}
         </Search>
       </Header>
+      <Table hits />
       {switch results {
       | NotAsked => React.null
       | Loading => <LoadingIndicator />
       | Done(Error(error)) => <RequestErrorIndicator error />
-      | Done(Ok(_)) => <>
-          <Table hits />
-          <Spacer />
-          <div
-            style={ReactDOM.Style.make(
-              ~marginBottom="2ex",
-              ~display="flex",
-              ~justifyContent="center",
-              (),
-            )}>
-            <Button onClick={_ => dispatch(More)}> {"More"->React.string} </Button>
-          </div>
-        </>
+      | Done(Ok(_)) =>
+        <div
+          style={ReactDOM.Style.make(
+            ~marginBottom="2ex",
+            ~display="flex",
+            ~justifyContent="center",
+            (),
+          )}>
+          <Button onClick={_ => dispatch(More)}> {"More"->React.string} </Button>
+        </div>
       }}
     </>
   }
