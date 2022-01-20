@@ -2,7 +2,7 @@
 
 Hacker News search engine using [algolia api](https://hn.algolia.com/api)
 
-Rewrite of my [rlr project](https://github.com/stevj/rlr) in ReScript.
+Rewrite of my [rlr project](https://github.com/sjehann/rlr) in ReScript.
 
 ## Resources
 
@@ -13,3 +13,4 @@ Rewrite of my [rlr project](https://github.com/stevj/rlr) in ReScript.
 - <https://medium.com/swlh/learn-rescript-a-safer-way-to-write-javascript-part-1-e0b56d447c44>
 - <https://javascript.plainenglish.io/learning-rescript-a-safer-way-to-write-javascript-part-2-5a4df5ecc09>
 - <https://medium.com/scalac/rescript-for-react-development-a734e54d5363>
+- <https://fullsteak.dev/>
