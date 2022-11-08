@@ -4,6 +4,14 @@ Hacker News search engine using [algolia api](https://hn.algolia.com/api)
 
 Rewrite of my [rlr project](https://github.com/sjehann/rlr) in ReScript.
 
+## Deployment
+
+Now deployed with [actions-gh-pages](https://github.com/peaceiris/actions-gh-pages)
+
+- Create a `gh-pages` branch
+- configure the repo to Deploy from this branch
+- add a `PUBLIC_PATH` secret with the GitHub repository base path as value (`der-alter/rlres`)
+
 ## Resources
 
 - <https://rescript-lang.org/docs/react/latest/introduction>
